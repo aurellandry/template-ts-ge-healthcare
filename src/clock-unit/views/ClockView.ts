@@ -26,6 +26,8 @@ export class ClockView {
     this.clockElementContainer.classList.add('clock');
 
     this.timeDisplayContainer = document.createElement('div');
+    this.timeDisplayContainer.classList.add('time-display');
+    this.timeDisplayContainer.classList.add('light-off');
   }
 
   render() {
@@ -42,28 +44,34 @@ export class ClockView {
     this.clockElementContainer.appendChild(this.clockActionsContainer);
   }
 
-  onModeClickHandler(): void {
+  getClockContainer(): HTMLDivElement {
+    return this.container;
+  }
+
+  private onModeClickHandler(): void {
     this.clockStateManager.transitionToNextState(this.clock);
     this.displayTime();
   }
 
-  onLightswitchClickHandler(): void {
-    const isLightOn = this.clockElementContainer.classList.contains('light-on');
+  private onLightswitchClickHandler(): void {
+    const isLightOn = this.timeDisplayContainer.classList.contains('light-on');
 
     if (isLightOn) {
-      this.clockElementContainer.classList.remove('light-on');
+      this.timeDisplayContainer.classList.remove('light-on');
+      this.timeDisplayContainer.classList.add('light-off');
     }
     else {
-      this.clockElementContainer.classList.add('light-on');
+      this.timeDisplayContainer.classList.add('light-on');
+      this.timeDisplayContainer.classList.remove('light-off');
     }
   }
 
-  onIncreaseClickHandler(): void {
+  private onIncreaseClickHandler(): void {
     this.clock.increaseTime();
     this.displayTime();
   }
 
-  onResetClickHandler(): void {
+  private onResetClickHandler(): void {
     this.resetClock();
     this.displayTime();
   }

@@ -1,3 +1,13 @@
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 h1 {
   color: red;
 }
@@ -20,7 +30,29 @@ h1 {
   border-radius: 50%;
 }
 
+.time-display {
+  padding: 16px;
+  margin-bottom: 8px;
+  border: 1px solid cadetblue;
+  border-radius: 12.5px;
+}
+
+.spin {
+  animation: rotating 2s linear infinite;
+}
+
 .light-on {
   background-color: #e6f27e;
   color: #000;
+}
+
+.light-off {
+  background-color: #7f7f7c;
+  color: #000;
+}
+
+#animation {
+  margin-top: 20px;
+  width: 80%;
+  height: 50%;
 }
