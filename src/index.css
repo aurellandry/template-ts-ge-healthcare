@@ -13,7 +13,33 @@ h1 {
 }
 
 .general-actions {
-  margin-bottom: 24px;
+  margin-bottom: 64px;
+  display: flex;
+  flex-direction: column;
+  min-height: 72px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.general-actions button {
+  width: 160px;
+  padding: 8px;
+  background-color: aliceblue;
+  border: 1px solid cadetblue;
+  border-radius: 12.5px;
+}
+
+.general-actions button:hover {
+  background-color: rgb(83, 126, 190);
+  transition: 0.5s ease;
+  cursor: pointer;
+}
+
+.general-actions input {
+  width: 640px;
+  padding: 8px;
+  border: 1px solid cadetblue;
+  border-radius: 12.5px;
 }
 
 .clock {
@@ -42,12 +68,12 @@ h1 {
 }
 
 .light-on {
-  background-color: #e6f27e;
+  background-color: #eef4bd;
   color: #000;
 }
 
 .light-off {
-  background-color: #7f7f7c;
+  background-color: #dedede;
   color: #000;
 }
 
