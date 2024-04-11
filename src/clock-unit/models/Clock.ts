@@ -1,25 +1,21 @@
 import { Hour } from "./Hour";
 import { Minute } from "./Minute";
-import { ClockState } from "../states/ClockState";
+import { State } from "../states/State";
+import { ReadOnlyState } from "../states/ReadOnlyState";
 
 export class Clock {
   private hour: Hour;
   private minute: Minute;
-  private state: ClockState;
+  private state: State;
 
   constructor(hour: Hour, minute: Minute) {
     this.hour = hour;
     this.minute = minute;
-    this.state = ClockState.ReadOnly;
+    this.state = new ReadOnlyState();
   }
 
   increaseTime(): void {
-    if (this.state === ClockState.EditableHour) {
-      this.increaseHour();
-    }
-    if (this.state === ClockState.EditableMinute) {
-      this.increaseMinute();
-    }
+    this.state.increase(this)
   }
 
   increaseHour(): void {
@@ -33,29 +29,23 @@ export class Clock {
     }
   }
 
-  getHours(): number {
-    return this.hour.getValue();
+  getTimeString(): string {
+    return `${this.getHours().toString().padStart(2, '0')}:${this.getMinutes().toString().padStart(2, '0')}`;
   }
 
-  getMinutes(): number {
-    return this.minute.getValue();
-  }
-
-  getState(): ClockState {
+  getState(): State {
     return this.state;
   }
 
-  toggleState(): void {
-    switch (this.state) {
-      case ClockState.EditableHour:
-        this.state = ClockState.EditableMinute;
-        break;
-      case ClockState.EditableMinute:
-        this.state = ClockState.ReadOnly;
-        break;
-      case ClockState.ReadOnly:
-        this.state = ClockState.EditableHour;
-        break;
-    }
+  setState(state: State): void {
+    this.state = state;
+  }
+
+  private getHours(): number {
+    return this.hour.getValue();
+  }
+
+  private getMinutes(): number {
+    return this.minute.getValue();
   }
 }

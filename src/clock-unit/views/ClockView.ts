@@ -1,21 +1,21 @@
 import { ClockFactory } from "../factory/ClockFactory";
 import { Clock } from "../models/Clock";
-import { ClockObserver } from "../observers/ClockObserver";
+import { ClockStateManager } from "../states/ClockStateManager";
 
 export class ClockView {
   private timezoneOffset: number;
-  private time: Clock;
+  private clock: Clock;
   private readonly container: HTMLDivElement;
   private readonly clockActionsContainer: HTMLDivElement;
   private readonly timeDisplayContainer: HTMLDivElement;
   private readonly clockElementContainer: HTMLDivElement;
-  private observer: ClockObserver;
+  private readonly clockStateManager: ClockStateManager;
 
   constructor(containerId: string, timezoneOffset: number = 0) {
     this.timezoneOffset = timezoneOffset;
-    this.time = ClockFactory.create(new Date().getUTCHours() + this.timezoneOffset, new Date().getMinutes());
-    this.observer = new ClockObserver();
-    this.observer.subscribe(this.displayTime);
+    this.resetClock();
+
+    this.clockStateManager = new ClockStateManager(this.clock.getState());
 
     this.container = document.getElementById(containerId) as HTMLDivElement;
 
@@ -31,17 +31,19 @@ export class ClockView {
   render() {
     this.container.appendChild(this.clockElementContainer);
 
-    this.timeDisplayContainer.textContent = this.getTimeString();
+    this.timeDisplayContainer.textContent = this.clock.getTimeString();
     this.clockElementContainer.appendChild(this.timeDisplayContainer);
 
     this.createButton('Mode', this.onModeClickHandler.bind(this));
     this.createButton('Increase', this.onIncreaseClickHandler.bind(this));
     this.createButton('Light switch', this.onLightswitchClickHandler.bind(this));
+    this.createButton('Reset', this.onResetClickHandler.bind(this));
+
     this.clockElementContainer.appendChild(this.clockActionsContainer);
   }
 
   onModeClickHandler(): void {
-    this.time.toggleState();
+    this.clockStateManager.transitionToNextState(this.clock);
     this.displayTime();
   }
 
@@ -57,8 +59,17 @@ export class ClockView {
   }
 
   onIncreaseClickHandler(): void {
-    this.time.increaseTime();
+    this.clock.increaseTime();
     this.displayTime();
+  }
+
+  onResetClickHandler(): void {
+    this.resetClock();
+    this.displayTime();
+  }
+
+  private resetClock(): void {
+    this.clock = ClockFactory.create(new Date().getUTCHours() + this.timezoneOffset, new Date().getMinutes());
   }
 
   private createButton(text: string, onClick: () => void) {
@@ -69,10 +80,6 @@ export class ClockView {
   }
 
   private displayTime() {
-    this.timeDisplayContainer.textContent = this.getTimeString();
-  }
-
-  private getTimeString(): string {
-    return `${this.time.getHours().toString().padStart(2, '0')}:${this.time.getMinutes().toString().padStart(2, '0')}`;
+    this.timeDisplayContainer.textContent = this.clock.getTimeString();
   }
 }
